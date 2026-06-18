@@ -1,5 +1,7 @@
 # VS Code Feature Scout
 
+[Русская версия](README.ru.md)
+
 VS Code is becoming an agent platform: custom instructions, custom agents, MCP
 servers, browser tools, tasks, profiles, remote tunnels, model providers, and a
 steady stream of new settings. The hard part is not reading every announcement.

@@ -1,0 +1,63 @@
+[project]
+name = "vscode-feature-scout"
+version = "0.1.0"
+description = "A small CLI that turns VS Code release notes and existing VS Code capabilities into actionable workflow recommendations."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "Andrej", email = "a.vikt.ilin@gmail.com" }]
+keywords = ["vscode", "agents", "mcp", "release-notes", "developer-tools"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development",
+    "Topic :: Utilities",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "ruff>=0.8",
+]
+
+[project.urls]
+Homepage = "https://github.com/Andrej-Ilin/vscode-feature-scout"
+Repository = "https://github.com/Andrej-Ilin/vscode-feature-scout"
+Issues = "https://github.com/Andrej-Ilin/vscode-feature-scout/issues"
+
+[project.scripts]
+vscode-feature-scout = "vscode_feature_scout.cli:main"
+vscode-feature-scout-watch = "vscode_feature_scout.watch:main"
+vscode-feature-scout-launchd = "vscode_feature_scout.launchd:main"
+
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "S"]
+ignore = [
+    "E501",
+    "S310",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101"]
+"src/vscode_feature_scout/launchd.py" = ["S404", "S603", "S607"]
+"src/vscode_feature_scout/watch.py" = ["S404", "S603", "S607"]
+
+[tool.ruff.format]
+line-ending = "lf"

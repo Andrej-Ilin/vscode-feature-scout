@@ -12,6 +12,17 @@ release notes and existing VS Code capabilities into actionable recommendations.
 It is designed to be cheap enough to run automatically and explicit enough to
 hand its report to Codex, Claude Code, Copilot, or another coding agent.
 
+## Intended Audience
+
+Feature Scout is for:
+
+- solo developers who live in VS Code, use AI agents, and do not want to read
+  every VS Code release note manually;
+- teams with `AGENTS.md`, `CLAUDE.md`, MCP, custom prompts, or custom agents who
+  want editor capabilities to become part of agent context;
+- maintainers who want a small, repeatable report instead of relying on whoever
+  happened to notice a new VS Code feature.
+
 ## What It Does
 
 Feature Scout has two complementary modes:
@@ -36,6 +47,48 @@ The reports are intentionally short and action-oriented:
 - concrete repo signals;
 - the smallest safe next action.
 
+## Typical Agent Loop
+
+The intended loop is deliberately simple:
+
+1. VS Code starts, restarts, or updates.
+2. The optional LaunchAgent runs Feature Scout.
+3. Feature Scout writes `latest.md` or `baseline.md`.
+4. Codex, Claude Code, Copilot, Continue, or another agent reads that report as
+   compact context.
+5. The agent adapts project instructions, prompts, tasks, or MCP configuration
+   only when the report shows a useful and relevant capability.
+
+## Example Output
+
+Shortened baseline report snippet:
+
+```markdown
+### Integrated Browser Tools
+
+- Priority: high
+- Adoption state: candidate
+- Repo signals: none
+- Settings: `workbench.browser.enableChatTools`, `workbench.browser.enableRemoteProxy`
+- Why it matters: Browser tools can turn local API/UI smoke checks into
+  agent-visible page, console, screenshot, and click flows.
+- Next action: Trial browser tools on one local smoke path before changing
+  shared settings.
+```
+
+Shortened release report snippet:
+
+```markdown
+### Integrated Browser / Browse over remote connections (Preview)
+
+- Score: 20
+- Keyword hits: `integrated browser`, `remote`, `workbench.browser`
+- Settings: `workbench.browser.enableRemoteProxy`
+- Suggested actions:
+  - Try it against local/remote app smoke checks before changing shared settings.
+  - Evaluate this setting key explicitly: `workbench.browser.enableRemoteProxy`.
+```
+
 ## Why This Exists
 
 Modern IDE features often land faster than team workflows can absorb them. A
@@ -54,6 +107,19 @@ This creates a quiet gap:
 Feature Scout fills that gap. It acts as a lightweight translator between VS
 Code capabilities and your project workflow.
 
+## Why Not Just Read Release Notes?
+
+You still can. Feature Scout is useful when release notes are not enough:
+
+- release notes are global; Feature Scout filters them through your project
+  profile;
+- release notes do not know whether your repo already has `AGENTS.md`,
+  `.vscode/mcp.json`, `.vscode/tasks.json`, or custom agents;
+- `state.json` lets automation skip unchanged releases;
+- baseline mode catches older VS Code capabilities that are no longer "new" but
+  may still be valuable;
+- the output is already shaped as a small Markdown handoff for AI agents.
+
 ## Design Principles
 
 - **No full-repo scan.** The scout reads a compact project profile and checks a
@@ -64,6 +130,14 @@ Code capabilities and your project workflow.
   rewrites.
 - **Safe automation.** The optional macOS LaunchAgent can run on VS Code
   start/update events without polling every minute.
+
+Concrete repo signals are intentionally boring and explicit. Baseline mode
+checks paths such as:
+
+- `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`;
+- `.claude/agents/`, `.github/prompts/`, `.vscode/prompts/`;
+- `.vscode/mcp.json`, `.mcp.json`;
+- `.vscode/tasks.json`, `.devcontainer/devcontainer.json`.
 
 ## Install
 
